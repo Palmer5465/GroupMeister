@@ -2,42 +2,71 @@ package com.example.groupmeister;
 
 public class Student {
     private String name;
-    private String prefLang1;
-    private String prefLang2;
-    private String prefProject1;
-    private String prefProject2;
-    private Student prefPartner;
-    private Student notPartner;
+    private int id;
+    private String prefLang;
+    private String prefProject;
+    private String prefPartner;
+    private String notPartner;
 
-    Student(String name){
+    Student(String name, int id){
         this.name = name;
+        this.id = id;
     }
 
-    public void setPrefLang1(String language){
-        this.prefLang1 = language;
+    @Override
+    public String toString() {
+        return "Student{" +
+                "name='" + name + '\'' +
+                ", id=" + id +
+                ", prefLang='" + prefLang + '\'' +
+                ", prefProject='" + prefProject + '\'' +
+                ", prefPartner=" + prefPartner +
+                ", notPartner=" + notPartner +
+                '}';
     }
 
-    public void setPrefLang2(String language){
-        this.prefLang2 = language;
+    public void setPrefLang(String language){
+        this.prefLang = language;
     }
 
-    public void setPrefProject1(String project){
-        this.prefProject1 = project;
+    public String getPrefLang(){
+        return this.prefLang;
     }
 
-    public void setPrefProject2(String project){
-        this.prefProject2 = project;
+    public void setPrefProject(String project){
+        this.prefProject = project;
     }
 
-    public void setPrefPartner(Student partner){
-        this.prefPartner = partner;
+    public String getPrefProject(){
+        return this.prefProject;
     }
 
-    public void notPartner(Student partner){
-        this.notPartner = partner;
+    public void setPrefPartner(String partnerName){
+        this.prefPartner = partnerName;
+    }
+
+    public String getPrefPartner(){
+        return this.prefPartner;
+    }
+
+    public void setNotPartner(String partnerName){
+        this.notPartner = partnerName;
+    }
+
+    public String getNotPartner(){
+        return this.notPartner;
     }
 
     public String getName(){
         return this.name;
     }
+
+    public void setId(int id){
+        this.id = id;
+    }
+
+    public int getId(){
+        return this.id;
+    }
+
 }

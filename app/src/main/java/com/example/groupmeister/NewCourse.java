@@ -2,69 +2,86 @@ package com.example.groupmeister;
 
 import androidx.appcompat.app.AppCompatActivity;
 import java.util.ArrayList;
+import java.util.List;
+
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
 public class NewCourse extends AppCompatActivity {
 
-    private ArrayList<String> studentNames;
-    private ArrayAdapter<String> studentNamesAdapter;
+    private Button addStudentBtn, submitCourseBtn;
+    private EditText studentNameText, courseNameText;
     private ListView lvStudents;
-    private ArrayList<Student> students;
-    private EditText studentNameText;
-    private EditText courseNameText;
+    private List<Student> students = new ArrayList<Student>();
+    int count = 1;
+    ArrayAdapter studentArrayAdapter;
+    DatabaseHelper databaseHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_course);
         setTitle("New Course");
-        lvStudents = findViewById(R.id.lvStudents);
+        addStudentBtn = findViewById(R.id.addStudentBtn);
+        submitCourseBtn = findViewById(R.id.submitCourseBtn);
         studentNameText = findViewById(R.id.studentNameText);
-        studentNames = new ArrayList<String>();
-        students = new ArrayList<Student>();
-        studentNamesAdapter = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1, studentNames);
         courseNameText = findViewById(R.id.courseNameText);
-        lvStudents.setAdapter(studentNamesAdapter);
+        lvStudents = findViewById(R.id.lvStudents);
 
-        setupListViewListener();
-    }
-
-    public void addStudent(View V){
-        String studentName = studentNameText.getText().toString();
-        if (studentName.equals("")){
-            Toast.makeText(this, "Student name required", Toast.LENGTH_SHORT).show();
-        }else {
-            studentNamesAdapter.add(studentName);
-            students.add(new Student(studentName));
-            studentNameText.setText("");
-        }
-    }
-
-    //removes student from the course
-    public void setupListViewListener(){
-        lvStudents.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener(){
+        //SQLite code implemented below was adapted from Shad Sluiter's tutorial video on Youtube
+        lvStudents.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                studentNames.remove(position);
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Student clickedStudent = (Student)parent.getItemAtPosition(position);
+                databaseHelper = new DatabaseHelper(NewCourse.this, courseNameText.getText().toString());
+                databaseHelper.deleteStudent(clickedStudent);
                 students.remove(position);
-                studentNamesAdapter.notifyDataSetChanged();
-                return true;
+                studentArrayAdapter = new ArrayAdapter(NewCourse.this, android.R.layout.simple_list_item_1, students);
+                lvStudents.setAdapter(studentArrayAdapter);
+                Toast.makeText(NewCourse.this, clickedStudent.getName()+" was removed", Toast.LENGTH_SHORT).show();
             }
         });
     }
 
+    //Adds a new student to the displayed list of students. Also creates new Student objects
+    public void addStudent(View V){
+        Student student;
+        String name = studentNameText.getText().toString();
+        databaseHelper = new DatabaseHelper(NewCourse.this, courseNameText.getText().toString());
+
+        if(name.equals("")){
+            Toast.makeText(this, "Student name required", Toast.LENGTH_SHORT).show();
+        }else if (courseNameText.getText().toString().equals("")){
+            Toast.makeText(this, "Enter course name", Toast.LENGTH_SHORT).show();
+        }else{
+            student = new Student(name, count);
+            count++;
+            studentNameText.setText("");
+            boolean success = databaseHelper.addStudent(student);
+            Toast.makeText(this, "Success= "+success, Toast.LENGTH_SHORT).show();
+            if (success = true){
+                students.add(student);
+                studentArrayAdapter = new ArrayAdapter(NewCourse.this, android.R.layout.simple_list_item_1, students);
+                lvStudents.setAdapter(studentArrayAdapter);
+            }
+        }
+    }
+
+    //Returns to main activity with new course and student info
     public void submitCourse(View V){
         String courseName = courseNameText.getText().toString();
         if (courseName.equals("")){
             Toast.makeText(this, "Course name required", Toast.LENGTH_SHORT).show();
         }else{
-
+            Intent i = new Intent(this, MainActivity.class);
+            startActivity(i);
         }
     }
 }
