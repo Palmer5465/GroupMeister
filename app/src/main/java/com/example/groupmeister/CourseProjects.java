@@ -14,7 +14,9 @@ public class CourseProjects extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_course_projects);
-        setTitle("course title here");
+        Intent i = getIntent();
+        courseTitle = i.getStringExtra("dbName");
+        setTitle(courseTitle);
     }
 
     public void newProject(View V){

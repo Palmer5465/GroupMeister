@@ -1,10 +1,13 @@
 package com.example.groupmeister;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.PersistableBundle;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -15,7 +18,7 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity {
 
     private ListView lvCourses;
-    private List<String> courseNames;
+    private ArrayList<String> courseNames;
     private ArrayAdapter<String> courseNamesAdapter;
     private String newCourse;
     DatabaseHelper databaseHelper;
@@ -40,6 +43,14 @@ public class MainActivity extends AppCompatActivity {
             lvCourses.setAdapter(courseNamesAdapter);
         }
 
+        lvCourses.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent i = new Intent(MainActivity.this, CourseProjects.class);
+                i.putExtra("courseName", (String)parent.toString());
+                startActivity(i);
+            }
+        });
     }
 
     public void newCourse(View V){
