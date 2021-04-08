@@ -81,6 +81,7 @@ public class NewCourse extends AppCompatActivity {
             Toast.makeText(this, "Course name required", Toast.LENGTH_SHORT).show();
         }else{
             Intent i = new Intent(this, MainActivity.class);
+            i.putExtra("dbName", courseName);
             startActivity(i);
         }
     }

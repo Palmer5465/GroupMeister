@@ -1,8 +1,8 @@
 package com.example.groupmeister;
 
 public class Student {
-    private String name;
     private int id;
+    private String name;
     private String prefLang;
     private String prefProject;
     private String prefPartner;
@@ -16,12 +16,12 @@ public class Student {
     @Override
     public String toString() {
         return "Student{" +
-                "name='" + name + '\'' +
-                ", id=" + id +
+                "id=" + id +
+                ", name='" + name + '\'' +
                 ", prefLang='" + prefLang + '\'' +
                 ", prefProject='" + prefProject + '\'' +
-                ", prefPartner=" + prefPartner +
-                ", notPartner=" + notPartner +
+                ", prefPartner='" + prefPartner + '\'' +
+                ", notPartner='" + notPartner + '\'' +
                 '}';
     }
 

@@ -78,8 +78,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         if(cursor.moveToFirst()){
         //Loop through the cursor
             do{
-                String studentName = cursor.getString(0);
-                int studentId = cursor.getInt(1);
+                int studentId = cursor.getInt(0);
+                String studentName = cursor.getString(1);
                 String prefLang = cursor.getString(2);
                 String prefProject = cursor.getString(3);
                 String prefPartner = cursor.getString(4);
