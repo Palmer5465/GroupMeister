@@ -47,7 +47,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent i = new Intent(MainActivity.this, CourseProjects.class);
-                i.putExtra("courseName", (String)parent.toString());
+                i.putExtra("courseName", (String)parent.getItemAtPosition(position));
                 startActivity(i);
             }
         });
