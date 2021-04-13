@@ -11,15 +11,13 @@ import androidx.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
+//SQLite code implemented below was adapted from Shad Sluiter's SQLite tutorial series on Youtube
 public class DatabaseHelper extends SQLiteOpenHelper {
 
-    //SQLite code implemented below was adapted from Shad Sluiter's tutorial video on Youtube
+
     public static final String STUDENT_TABLE = "STUDENT_TABLE";
     public static final String COLUMN_STUDENT_NAME = "STUDENT_NAME";
     public static final String COLUMN_ID = "ID";
-    public static final String COLUMN_PREF_LANG = "PREF_LANG";
-    public static final String COLUMN_PREF_PROJECT = "PREF_PROJECT";
-    public static final String COLUMN_PREF_PARTNER = "PREF_PARTNER";
     public static final String COLUMN_NOT_PARTNER = "NOT_PARTNER";
 
     public DatabaseHelper(@Nullable Context context, String name) {
@@ -29,7 +27,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     //Called the first time a database is accessed
     @Override
     public void onCreate(SQLiteDatabase db) {
-        String createTableStatement = "CREATE TABLE " + STUDENT_TABLE + " (" + COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " + COLUMN_STUDENT_NAME + " TEXT, " + COLUMN_PREF_LANG + " TEXT, " + COLUMN_PREF_PROJECT + " TEXT, " + COLUMN_PREF_PARTNER + " TEXT, " + COLUMN_NOT_PARTNER + " TEXT)";
+        String createTableStatement = "CREATE TABLE " + STUDENT_TABLE + " (" + COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " + COLUMN_STUDENT_NAME + " TEXT, " + COLUMN_NOT_PARTNER + " TEXT)";
 
         db.execSQL(createTableStatement);
     }
@@ -45,9 +43,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         ContentValues cv = new ContentValues();
 
         cv.put(COLUMN_STUDENT_NAME, student.getName());
-        cv.put(COLUMN_PREF_LANG, student.getPrefLang());
-        cv.put(COLUMN_PREF_PROJECT, student.getPrefProject());
-        cv.put(COLUMN_PREF_PARTNER, student.getPrefPartner());
         cv.put(COLUMN_NOT_PARTNER, student.getNotPartner());
 
         long insert = db.insert(STUDENT_TABLE, null, cv);
@@ -70,7 +65,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         }
     }
 
-    public List<Student> getEveryone(){
+    public List<Student> getStudents(){
+        int count = 1;
         List<Student> returnList = new ArrayList<>();
         String queryString = "SELECT * FROM "+ STUDENT_TABLE;
         SQLiteDatabase db = this.getReadableDatabase();
@@ -78,14 +74,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         if(cursor.moveToFirst()){
         //Loop through the cursor
             do{
-                int studentId = cursor.getInt(0);
                 String studentName = cursor.getString(1);
-                String prefLang = cursor.getString(2);
-                String prefProject = cursor.getString(3);
-                String prefPartner = cursor.getString(4);
-                String notPartner = cursor.getString(5);
 
-                Student newStudent = new Student(studentName, cursor.getColumnIndex(STUDENT_TABLE));
+                Student newStudent = new Student(studentName, count);
+                count++;
                 returnList.add(newStudent);
             }while(cursor.moveToNext());
         }else{

@@ -25,6 +25,7 @@ public class CourseProjects extends AppCompatActivity {
     public void newProject(View V){
         //code below demonstrated in Android App Development tutorial series by Caleb Curry
         Intent i = new Intent(this, NewProject.class);
+        i.putExtra("course title",courseTitle);
         startActivity(i);
     }
 }

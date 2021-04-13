@@ -12,7 +12,8 @@
         <activity android:name=".CourseProjects"></activity>
         <activity android:name=".NewCourse"
             android:windowSoftInputMode="adjustPan"/>
-        <activity android:name=".NewProject" />
+        <activity android:name=".NewProject"
+            android:windowSoftInputMode="adjustPan"/>
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

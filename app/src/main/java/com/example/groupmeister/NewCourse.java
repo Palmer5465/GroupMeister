@@ -9,14 +9,12 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
 public class NewCourse extends AppCompatActivity {
 
-    private Button addStudentBtn, submitCourseBtn;
     private EditText studentNameText, courseNameText;
     private ListView lvStudents;
     private List<Student> students = new ArrayList<Student>();
@@ -29,11 +27,9 @@ public class NewCourse extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_course);
         setTitle("New Course");
-        addStudentBtn = findViewById(R.id.addStudentBtn);
-        submitCourseBtn = findViewById(R.id.submitCourseBtn);
         studentNameText = findViewById(R.id.studentNameText);
         courseNameText = findViewById(R.id.courseNameText);
-        lvStudents = findViewById(R.id.lvStudents);
+        lvStudents = findViewById(R.id.lvStudentsProject);
 
         //SQLite code implemented below was adapted from Shad Sluiter's tutorial video on Youtube
         lvStudents.setOnItemClickListener(new AdapterView.OnItemClickListener() {
