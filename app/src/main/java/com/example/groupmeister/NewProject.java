@@ -13,6 +13,7 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 public class NewProject extends AppCompatActivity {
 
@@ -20,7 +21,8 @@ public class NewProject extends AppCompatActivity {
     private EditText projectNameText, groupSizeText, notPartnerText;
     private ListView lvStudents;
     private List<Student> students = new ArrayList<Student>();
-    private Student clickedStudent;
+    private Student utilityStudent;
+    private int groupSize;
     private boolean studentIsValid;
     ArrayAdapter studentArrayAdapter;
     DatabaseHelper databaseHelper;
@@ -44,20 +46,17 @@ public class NewProject extends AppCompatActivity {
         lvStudents.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                clickedStudent = (Student)parent.getItemAtPosition(position);
+                utilityStudent = (Student)parent.getItemAtPosition(position);
                 notPartner = notPartnerText.getText().toString();
                 studentIsValid = validateStudent(notPartner);
-                if (clickedStudent.getName().equals(notPartner)) {
-                    Toast.makeText(NewProject.this, clickedStudent.getName()+" cannot not work with "+notPartner, Toast.LENGTH_SHORT).show();
-                    System.out.println(clickedStudent.getName()+" cannot not work with "+notPartner);
+                if (utilityStudent.getName().equals(notPartner)) {
+                    Toast.makeText(NewProject.this, utilityStudent.getName()+" cannot not work with "+notPartner, Toast.LENGTH_SHORT).show();
                 }else if(!studentIsValid) {
                     Toast.makeText(NewProject.this, notPartner +" is not enrolled in this course", Toast.LENGTH_SHORT).show();
-                    System.out.println(notPartner +" is not enrolled in this course");
                 }else{
                     students.get(position).setNotPartner(notPartner);
                     lvStudents.setAdapter(studentArrayAdapter);
-                    Toast.makeText(NewProject.this, "Preferences changed for " + clickedStudent.getName(), Toast.LENGTH_SHORT).show();
-                    System.out.println("Preferences changed for " + clickedStudent.getName());
+                    Toast.makeText(NewProject.this, "Preferences changed for " + utilityStudent.getName(), Toast.LENGTH_SHORT).show();
                 }
             }
 
@@ -73,7 +72,55 @@ public class NewProject extends AppCompatActivity {
         return false;
     }
 
-    public List<List<Student>> generateGroups(int groupSizes){
-        return null;
+    public void replace(int index1, int index2){
+        utilityStudent = students.get(index1);
+        students.set(index1, students.get(index2));
+        students.set(index2, utilityStudent);
+    }
+
+    public void shuffle(){
+        Random rand = new Random();
+        int index1;
+        int index2;
+        for(int rep = 0; rep < 20; rep++) {
+            index1 = rand.nextInt(students.size());
+            index2 = rand.nextInt(students.size());
+            if(index1 == index2 && (index2 + 1) != students.size()){
+                index2++;
+            }else if(index1 == index2 && index2 != 0){
+                index2--;
+            }
+            replace(index1, index2);
+        }
+    }
+
+    public void assignGroups(int numGroups){
+        for(int groupNum = 1; groupNum <= numGroups; groupNum++){
+            databaseHelper = new DatabaseHelper(NewProject.this, projectNameText.getText().toString()+groupNum);
+            int studentNum = 1;
+            while(studentNum <= groupSize && !students.isEmpty()) {
+                databaseHelper.addStudent(students.get(0));
+                students.remove(0);
+                studentNum++;
+                System.out.println(students.toString());
+            }
+        }
+    }
+
+    public void generateGroups(View V){
+        if(projectNameText.getText().toString().equals("") || groupSizeText.getText().toString().equals("")){
+            Toast.makeText(NewProject.this, "Project name and group size required", Toast.LENGTH_SHORT).show();
+        }else {
+            groupSize = Integer.parseInt(groupSizeText.getText().toString());
+            System.out.println(students.toString());
+            shuffle();
+            lvStudents.setAdapter(studentArrayAdapter);
+            System.out.println(students.toString());
+            int numGroups = students.size() / groupSize;
+            if (students.size() % groupSize != 0) {
+                numGroups++;
+            }
+            assignGroups(numGroups);
+        }
     }
 }

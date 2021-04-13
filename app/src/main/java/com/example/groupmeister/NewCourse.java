@@ -61,7 +61,6 @@ public class NewCourse extends AppCompatActivity {
             count++;
             studentNameText.setText("");
             boolean success = databaseHelper.addStudent(student);
-            Toast.makeText(this, "Success= "+success, Toast.LENGTH_SHORT).show();
             if (success = true){
                 students.add(student);
                 studentArrayAdapter = new ArrayAdapter(NewCourse.this, android.R.layout.simple_list_item_1, students);
