@@ -21,6 +21,7 @@ public class NewProject extends AppCompatActivity {
     private EditText projectNameText, groupSizeText, notPartnerText;
     private ListView lvStudents;
     private List<Student> students = new ArrayList<Student>();
+    private List<Student> group = new ArrayList<Student>();
     private Student utilityStudent;
     private int groupSize;
     private boolean studentIsValid;
@@ -59,7 +60,6 @@ public class NewProject extends AppCompatActivity {
                     Toast.makeText(NewProject.this, "Preferences changed for " + utilityStudent.getName(), Toast.LENGTH_SHORT).show();
                 }
             }
-
         });
     }
 
@@ -95,14 +95,30 @@ public class NewProject extends AppCompatActivity {
     }
 
     public void assignGroups(int numGroups){
+        Random rand = new Random();
+        int indexShuffle;
+        int studentNum;
+        boolean notPartnerInGroup = false;
         for(int groupNum = 1; groupNum <= numGroups; groupNum++){
             databaseHelper = new DatabaseHelper(NewProject.this, projectNameText.getText().toString()+groupNum);
-            int studentNum = 1;
+            studentNum = 1;
             while(studentNum <= groupSize && !students.isEmpty()) {
-                databaseHelper.addStudent(students.get(0));
-                students.remove(0);
-                studentNum++;
-                System.out.println(students.toString());
+                group = databaseHelper.getStudents();
+                for(int index = 0; index < group.size(); index++){
+
+                    if(group.get(index).getNotPartner().equals(students.get(0).getName()) || students.get(0).getNotPartner().equals(group.get(index).getName())){
+                        notPartnerInGroup = true;
+                    }
+                }
+                if(!notPartnerInGroup) {
+                    databaseHelper.addStudent(students.get(0));
+                    students.remove(0);
+                    studentNum++;
+                }else{
+                    indexShuffle = rand.nextInt(students.size());
+                    replace(0, indexShuffle);
+                    notPartnerInGroup = false;
+                }
             }
         }
     }
@@ -112,7 +128,6 @@ public class NewProject extends AppCompatActivity {
             Toast.makeText(NewProject.this, "Project name and group size required", Toast.LENGTH_SHORT).show();
         }else {
             groupSize = Integer.parseInt(groupSizeText.getText().toString());
-            System.out.println(students.toString());
             shuffle();
             lvStudents.setAdapter(studentArrayAdapter);
             System.out.println(students.toString());

@@ -3,7 +3,7 @@ package com.example.groupmeister;
 public class Student {
     private int id;
     private String name;
-    private String notPartner;
+    private String notPartner = "None";
 
     Student(String name, int id){
         this.name = name;
