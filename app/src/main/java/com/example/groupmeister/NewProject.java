@@ -121,6 +121,11 @@ public class NewProject extends AppCompatActivity {
                 numGroups++;
             }
             assignGroups(numGroups);
+            Intent i = new Intent(this, CourseProjects.class);
+            i.putExtra("project name", projectNameText.getText().toString());
+            i.putExtra("courseName", courseTitle);
+            i.putExtra("numGroups", numGroups);
+            startActivity(i);
         }
     }
 }

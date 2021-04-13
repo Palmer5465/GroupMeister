@@ -21,7 +21,7 @@ public class MainActivity extends AppCompatActivity {
     private ArrayList<String> courseNames;
     private ArrayAdapter<String> courseNamesAdapter;
     private String newCourse;
-    DatabaseHelper databaseHelper;
+    //DatabaseHelper databaseHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,7 +32,7 @@ public class MainActivity extends AppCompatActivity {
 
         Intent i = getIntent();
         newCourse = i.getStringExtra("dbName");
-        databaseHelper = new DatabaseHelper(this, newCourse);
+        //databaseHelper = new DatabaseHelper(this, newCourse);
 
         courseNames = new ArrayList<String>();
         if(newCourse!=null){
